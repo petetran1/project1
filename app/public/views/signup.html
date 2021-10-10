@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tran Corp.</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/views/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/views/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/views/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/views/css/style.css">
+
+    <!-- font -->
+    <link href='http://fonts.googleapis.com/css?family=Nova+Square' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/views/font/font.css">
+  </head>
+  <body>
+    <div class="">
+      <div class="form">
+        <div class="signup">
+          <div class="signup-header">
+            <h3>Sign Up</h3>
+            <p>Please enter your email and password</p>
+          </div>
+        </div>
+        <form class="" method="POST" action="/account/signup">
+            <div>
+                <label for="email">Email: </label>
+                <input id="email" type="email" name="email"/>
+            </div>
+            <div>
+                Password: <input type="password" name="password"/>
+            </div>
+            <input type="submit" value="Submit"/>
+            <p class="message">Have an account? <a href="/account/login">Login</a></p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
