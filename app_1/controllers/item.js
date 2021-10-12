@@ -2,18 +2,16 @@ const Item = require('../models/item');
 
 exports.createItem = (req, res, next) => {
     const thing = new Item({
-      _id: req.params.id,
       name: req.body.name,
-      description: req.body.description,
       quantity: req.body.quantity,
-      warehouse_id: req.body.warehouse_id,
-      date_in: req.body.data_in
+      description: req.body.description,
+      price: req.body.price,
+      warehouse: req.body.warehouse,
+      date_in: req.body.date_in
     });
     thing.save().then(
       () => {
-        res.status(201).json({
-          message: 'Post saved successfully!'
-        });
+        res.redirect(`/warehouse-detail/${req.body.warehouse}`)
       }
     ).catch(
       (error) => {
@@ -47,7 +45,7 @@ exports.modifyItem = (req, res, next) => {
         description: req.body.description,
         quantity: req.body.quantity,
         warehouse_id: req.body.warehouse_id,
-        date_in: req.body.data_in
+        date_in: req.body.date_in
     });
     Item.updateOne({_id: req.params.id}, thing).then(
       () => {
@@ -81,7 +79,7 @@ exports.deleteItem = (req, res, next) => {
 }
 
 exports.getAllItems = (req, res, next) => {
-    Item.find().then(
+    Item.find({warehouse: req.params.id}).then(
       (things) => {
         res.status(200).json(things);
       }

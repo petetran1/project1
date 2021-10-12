@@ -1,16 +1,15 @@
 function getWarehouses() {
-
+    let company = window.location.href.replace(/.+\/company-detail\//,'');
     // AJAX -> Asynchronous JavaScript And XML
     const xhr = new XMLHttpRequest();
-    let company = window.location.href.replace(/.+\/company-detail\//,'');
-
+    
     xhr.onload = function() {
         const warehouses = JSON.parse(xhr.response);
         const warehouseContainer = document.getElementById('warehouses');
         
         //console.log(warehouses);
         if (xhr.status === 200) {
-            document.getElementById('header').innerText = `${company}'s warehouses`;
+            document.getElementById('header').innerText = `${company}'s Warehouses`;
             for (warehouse of warehouses) {
                 //console.log(JSON.parse(warehouse));
                 const tr = document.createElement('tr');
@@ -23,6 +22,7 @@ function getWarehouses() {
                 tr.appendChild(li1);
                 tr.appendChild(li2);
                 tr.appendChild(li3);
+                tr.setAttribute("onclick", `window.location='/warehouse-detail/${warehouse.name}'`);
                 warehouseContainer.append(tr);
             }
         } else {

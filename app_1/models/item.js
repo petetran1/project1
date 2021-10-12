@@ -4,7 +4,7 @@ const itemSchema = mongoose.Schema({
     name: {type: String, required: true},
     quantity: Number,
     description: String,
-    price: Number,
+    price: String,
     warehouse: {type: String, required: true},
     date_in: String
 });

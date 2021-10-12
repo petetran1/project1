@@ -14,20 +14,3 @@ exports.getAllWarehouses = (req, res, next) => {
       }
     );
 }
-/*
-exports.getOneWarehouse = (req, res, next) => {
-    Warehouse.findOne({
-      company: req.params.id
-    }).then(
-      (thing) => {
-        res.status(200).json(thing);
-      }
-    ).catch(
-      (error) => {
-        res.status(404).json({
-          error: error
-        });
-      }
-    );
-}
-*/

@@ -1,57 +1,72 @@
-function getCompanies() {
-
+function getItems() {
+    let warehouse = window.location.href.replace(/.+\/warehouse-detail\//,'');
     // AJAX -> Asynchronous JavaScript And XML
     const xhr = new XMLHttpRequest();
-    console.log('Before Loading')
     xhr.onload = function() {
-        const companies = JSON.parse(xhr.response);
-        const companyContainer = document.getElementById('companies');
+        //add_btn.onclick = createItem;
+        const items = JSON.parse(xhr.response);
+        const itemContainer = document.getElementById('items');
+        let add_btn = document.getElementById('addItem');
+        add_btn.onclick = createItem;
         if (xhr.status === 200) {
-            // title, director, year
-            for (company of companies) {
+            document.getElementById('header').innerText = `${warehouse}'s Warehouses`;
+            for (item of items) {
                 const tr = document.createElement('tr');
-                //ul.classList.add('list-group', 'list-group-horizontal-sm');
+                tr.setAttribute('id', item._id);
                 const li1 = document.createElement('td');
-                //li1.classList.add('list-group-item');
-                li1.innerText = company.name;
+                li1.innerText = item.name;
                 const li2 = document.createElement('td');
-                //li2.classList.add('list-group-item');
-                li2.innerText = company.employees;
+                li2.innerText = item.quantity;
                 const li3 = document.createElement('td');
-                //li3.classList.add('list-group-item');
-                li3.innerText = company.address;
-                //div.innerText = `Name: ${company.name}\n Address: ${company.address}\n Employees: ${company.employees}\n\n`;
+                li3.innerText = item.description;
+                const li4 = document.createElement('td');
+                li4.innerText = item.price;
+                const li5 = document.createElement('td');
+                li5.innerText = item.date_in;
+                const li6 = document.createElement('td');
+                const li7 = document.createElement('td');
+                
+                const delete_btn = document.createElement('button');
+                delete_btn.classList.add('btn','btn-danger');
+                delete_btn.value = item._id;
+                delete_btn.addEventListener('click', _ => {
+                    fetch(`/item/${item._id}`, {
+                      method: 'delete',
+                    }).then( _ => document.getElementById(item._id).remove());
+                })
+                delete_btn.innerText = "DELETE";
+                const update_btn = document.createElement('button');
+                update_btn.classList.add('btn','btn-primary');
+                update_btn.value = item._id;
+                update_btn.onclick = updateItem;
+                update_btn.innerText = "UPDATE";
+                li6.appendChild(delete_btn);
+                li7.appendChild(update_btn);
                 tr.appendChild(li1);
                 tr.appendChild(li2);
                 tr.appendChild(li3);
-                //const button = document.createElement('button');
-                //button.value = company.title;
-                //button.onclick = delete;
-                //button.innerText = "DELETE ";
-                //div.append(button);
-                tr.setAttribute("onclick", `window.location='/warehouse/${company.name}'`);
-                companyContainer.append(tr);
+                tr.appendChild(li4);
+                tr.appendChild(li5);
+                tr.appendChild(li6);
+                tr.appendChild(li7);
+
+                itemContainer.append(tr);
             }
         } else {
             // Handles error
-            companyContainer.innerText = `${companies.error}`;
+            itemContainer.innerText = `${items.error}`;
         }
     }
-    xhr.open('GET', '/company'); // Hits routes/api/movie.js
+    xhr.open('GET', `/item/${warehouse}`); // Hits routes/api/movie.js
     xhr.send();
 }
 /*
-function deleteItem(e) {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        console.log(JSON.parse(xhr.response));
-        if (xhr.status === 200) {
-            e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-        }
-    }
-    xhr.open('DELETE', `/movies/${e.target.value}`);
-    xhr.send();
-}
+<a href='#'>
+    <button type="button" class="btn btn-outline-info btn-sm m-0 waves-effect">View</button>
+</a> 
+*/
+
+
 
 function updateItem(e) {
     const xhr = new XMLHttpRequest();
@@ -61,39 +76,37 @@ function updateItem(e) {
             e.target.parentNode.parentNode.removeChild(e.target.parentNode);
         }
     }
-    xhr.open('DELETE', `/movies/${e.target.value}`);
+    xhr.open('DELETE', `/warehouse-detail/${e.target.value}`);
     xhr.send();
 }
 
-function getItems() {
-
-    // AJAX -> Asynchronous JavaScript And XML
+function createItem(e) {
+    const warehouse = window.location.href.replace(/.+\/warehouse-detail\//,'');
+    const warehouseContainer = document.getElementById('warehouses');
     const xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        const companies = JSON.parse(xhr.response);
-        const companyContainer = document.getElementById('companies');
-        console.log(companies);
+        //console.log(xhr.response);
         if (xhr.status === 200) {
-            // title, director, year
-            for (company of companies) {
-                const div = document.createElement('div');
-                div.innerText = `Title: ${company.name}\n Director: ${company.address}\n Year: ${company.state}\n\n`;
-                const button = document.createElement('button');
-                button.value = movie.title;
-                button.onclick = deleteMovie;
-                button.innerText = "DELETE MOVIE";
-                div.append(button);
-                movieContainer.append(div);
-            }
-        } else {
-            // Handles error
-            movieContainer.innerText = `${movies.error}`;
+            const tr = document.createElement('tr');
+            const li1 = document.createElement('td');
+            li1.innerText = warehouse.name;
+            const li2 = document.createElement('td');
+            li2.innerText = warehouse.capacity;
+            const li3 = document.createElement('td');
+            li3.innerText = warehouse.address;
+            tr.appendChild(li1);
+            tr.appendChild(li2);
+            tr.appendChild(li3);
+            tr.setAttribute("onclick", `window.location='/warehouse-detail/${warehouse}'`);
+            warehouseContainer.append(tr);
         }
     }
-    xhr.open('GET', '/movies'); // Hits routes/api/movie.js
+    xhr.open('GET', `/warehouse-detail/${e.target.value}`);
     xhr.send();
 }
-*/
+
 window.addEventListener('DOMContentLoaded', () => {
-    getCompanies();
+    getItems();
 });
+
+

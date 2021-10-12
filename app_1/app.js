@@ -29,6 +29,7 @@ app.use('/item', itemRoutes);
 app.get('/dashboard', (req, res) => {
     res.sendFile(resolve('public', 'views', 'company.html'));
 });
+
 app.get(/\/warehouse-detail\/.+/ , (req, res) => {
     res.sendFile(resolve('public', 'views', 'item.html'));
 });
