@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-
+const multer = require('multer');
+const upload = multer();
 
 const itemCtrl = require('../controllers/item');
 
-router.post('/', itemCtrl.createItem);
-router.get('/:id', itemCtrl.getAllItems);
-router.put('/:id', itemCtrl.modifyItem);
-router.delete('/:id', itemCtrl.deleteItem);
+router.post('/:warehouse', itemCtrl.createItem);
+router.get('/:warehouse', itemCtrl.getAllItems);
+router.get('/:warehouse/:id', itemCtrl.getOneItem);
+router.post('/:warehouse/:id', itemCtrl.updateItem);
+router.delete('/:warehouse/:id', itemCtrl.deleteItem);
 
 
 module.exports = router;

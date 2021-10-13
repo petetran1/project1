@@ -18,7 +18,7 @@ function getCompanies() {
                 tr.appendChild(li1);
                 tr.appendChild(li2);
                 tr.appendChild(li3);
-                tr.setAttribute("onclick", `window.location='/company-detail/${company.name}'`);
+                tr.setAttribute("onclick", `window.location='/company/${company.name}'`);
                 companyContainer.append(tr);
             }
         } else {
@@ -26,7 +26,7 @@ function getCompanies() {
             companyContainer.innerText = `${companies.error}`;
         }
     }
-    xhr.open('GET', '/company'); // Hits routes/api/movie.js
+    xhr.open('GET', '/api/companies'); // Hits routes/api/movie.js
     xhr.send();
 }
 

@@ -4,6 +4,6 @@ const {resolve} = require('path');
 
 const warehouseCtrl = require('../controllers/warehouse');
 
-router.get('/:id', warehouseCtrl.getAllWarehouses);
+router.get('/:company', warehouseCtrl.getWarehouses);
 
 module.exports = router;
