@@ -26,7 +26,7 @@ function getCompanies() {
             companyContainer.innerText = `${companies.error}`;
         }
     }
-    xhr.open('GET', '/api/companies'); // Hits routes/api/movie.js
+    xhr.open('GET', '/api/companies'); // Hits routes/api/companies
     xhr.send();
 }
 

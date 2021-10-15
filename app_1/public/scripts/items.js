@@ -1,14 +1,24 @@
 function getItems() {
-    let warehouse = window.location.href.replace(/.+\/warehouse\//,'');
+    let warehouse = window.location.href.replace(/.+(\/warehouse\/|\/api\/items\/)/,'').replace(/\/.+/,'').replace(/\?.+/,'');
+    let query = window.location.href.replace(/.+(\/warehouse\/|\/api\/items\/)/,'');
+    console.log('value of warehouse in getItems', warehouse);
+    console.log('value of query is', query);
     // AJAX -> Asynchronous JavaScript And XML
     const xhr = new XMLHttpRequest();
     xhr.onload = function() {
         const items = JSON.parse(xhr.response);
+        //console.log('list of item in getItems xhr', items)
         const itemContainer = document.getElementById('items');
         if (xhr.status === 200) {
-            document.getElementById('header').innerText = `${warehouse}'s Warehouses`;
+            document.getElementById('header').innerText = `${warehouse}'s Items`;
             const add_btn = document.getElementById('addItem');
-            add_btn.addEventListener('click',createItem);
+            //add_btn.addEventListener('click',createItem);
+            const search_btn = document.getElementById('search-btn');
+
+            
+            search_btn.addEventListener('click', getItems);
+            
+            
             for (item of items) {
                 const tr = document.createElement('tr');
                 tr.setAttribute('id', item._id);
@@ -65,34 +75,38 @@ function getItems() {
             itemContainer.innerText = `${items.error}`;
         }
     }
-    xhr.open('GET', `/api/items/${warehouse}`);
+    if (query.includes('?')) {
+        //query = query.replace(/\/*?/,'/?');
+        //console.log('value of query is', query);
+        xhr.open('GET', `/api/items/${query}`);
+    } else {
+        xhr.open('GET', `/api/items/${warehouse}`);
+    }
+    
     xhr.send();
 }
 
 
 
 function updateItem(e) {
-    const warehouse = window.location.href.replace(/.+\/warehouse\//,'');
-    
+    let warehouse = window.location.href.replace(/.+(\/warehouse\/|\/api\/items\/)/,'').replace(e.target.value,'');
     const xhr = new XMLHttpRequest();
     const item = document.getElementById('itemId').value;
     console.log('this is value of item in updateItem scripts', item);
     xhr.onreadystatechange = function() {
         if (xhr.status === 200) {
-            
             const tr = document.getElementById(item);
-            console.log('inner text', elem.childNodes[0].innerText);
-            console.log('parent node',elem.parentNode.parentNode);
+            
         }
     }
 
     xhr.open('POST', `/api/items/${warehouse}/${item}`, true);
-    xhr.send("foo=bar&lorem=ipsum");
+    xhr.send();
 }
 
 
 function deleteItem(e) {
-    const warehouse = window.location.href.replace(/.+\/warehouse\//,'');
+    let warehouse = window.location.href.replace(/.+(\/warehouse\/|\/api\/items\/)/,'').replace(/\/.+/,'');
     const xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status === 200) {
@@ -100,12 +114,12 @@ function deleteItem(e) {
             elem.remove();
         }
     }
-    xhr.open('DELETE', `/api/items/${warehouse}/${e.target.value}`);
+    xhr.open('DELETE', `/api/items/${warehouse}/${e.target.value}`, true);
     xhr.send();
 }
 
 function createItem() {
-    const warehouse = window.location.href.replace(/.+\/warehouse\//,'');
+    let warehouse = window.location.href.replace(/.+(\/warehouse\/|\/api\/items\/)/,'').replace(/\?.+/,'');
     const warehouseContainer = document.getElementById('warehouses');
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {

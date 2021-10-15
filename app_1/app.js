@@ -1,6 +1,4 @@
 const express = require('express');
-
-const methodOverride = require('method-override');
 const cors = require('cors');
 const {resolve} = require('path');
 require('dotenv').config();
@@ -17,17 +15,26 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/static', express.static('public'))
+
+
+
 app.use('/api/companies', companyRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 app.use('/api/items', itemRoutes);
+app.use('/warehouse' , (req, res) => {
+    res.sendFile(resolve('public', 'views', 'warehouse.html'));
+});
+
+
+app.get(/.+api\/items\/.+/, (req, res) => {
+    //console.log('good job')
+    res.sendFile(resolve('public', 'views', 'warehouse.html'));
+});
 
 app.get('/dashboard', (req, res) => {
     res.sendFile(resolve('public', 'views', 'dashboard.html'));
 });
 
-app.get(/\/warehouse\/.+/ , (req, res) => {
-    res.sendFile(resolve('public', 'views', 'warehouse.html'));
-});
 app.get(/\/company\/.+/ , (req, res) => {
     res.sendFile(resolve('public', 'views', 'company.html'));
 });

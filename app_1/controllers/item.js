@@ -16,17 +16,14 @@ exports.createItem = (req, res, next) => {
       name: req.body.name,
       quantity: req.body.quantity,
       description: req.body.description,
-      price: req.body.price,
+      price: '$'+req.body.price,
       warehouse: req.body.warehouse,
       date_in: req.body.date_in
     });
-
     thing.save().then(
       () => {
-        res.redirect(`/warehouse/${req.body.warehouse}`);
-      }
-    ).then(
-      () => {
+        res.sendFile(resolve('public', 'views', 'warehouse.html'));
+        console.log(thing);
       }
     ).catch(
       (error) => {
@@ -85,7 +82,7 @@ exports.updateItem = (req, res, next) => {
           if(!item) {
             res.status(404).send({message: "Item not found with id " + req.params.id})
           } else {
-            res.redirect(`/warehouse/${req.body.warehouse}`);
+            res.sendFile(resolve('public', 'views', 'warehouse.html'));
           }
           
         }
@@ -134,17 +131,88 @@ exports.getAllItems = (req, res, next) => {
         console.error(error);
     });
 
-    Item.find({warehouse: req.params.warehouse}).then(
-      (things) => {
-        res.status(200).json(things);
+    if (req.query.hasOwnProperty('query') === false || req.query.query === '') {
+        console.log('empty query');
+        Item.find({warehouse: req.params.warehouse}).then(
+          (things) => {
+            res.status(200).json(things);
+            //console.log('this is thing', things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
+    } else {
+      if (req.query.filter == 'name' || req.query.hasOwnProperty('filter') === false) {
+        Item.find({warehouse: req.params.warehouse, name: { "$regex": req.query.query, "$options": "i" }}).then(
+          (things) => {
+            res.status(200).json(things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
       }
-    ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
+      if (req.query.filter == 'quantity') {
+        console.log('in here', req.query.query)
+        Item.find({ warehouse: req.params.warehouse, quantity: { $eq: parseInt(req.query.query) } }).then(
+          (things) => {
+            res.status(200).json(things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
       }
-    );
+      if (req.query.filter == 'description') {
+        Item.find({warehouse: req.params.warehouse, description: { "$regex": req.query.query, "$options": "i" }}).then(
+          (things) => {
+            res.status(200).json(things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
+      }
+      if (req.query.filter == 'price') {
+        Item.find({warehouse: req.params.warehouse, price: req.query.query}).then(
+          (things) => {
+            res.status(200).json(things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
+      }
+      if (req.query.filter == 'date') {
+        Item.find({warehouse: req.params.warehouse, date_in: { "$regex": req.query.query, "$options": "i" }}).then(
+          (things) => {
+            res.status(200).json(things);
+          }
+        ).catch(
+          (error) => {
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
+      }
+    }
   }
 
   //mongoose.connection.close();
